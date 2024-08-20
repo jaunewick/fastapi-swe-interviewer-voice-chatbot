@@ -10,6 +10,7 @@ transformers = "*"
 tensorflow = "*"
 tf-keras = "*"
 torch = "*"
+aiofiles = "*"
 
 [dev-packages]
 
