@@ -1,6 +1,6 @@
 import os
 import json
-from fastapi import FastAPI, UploadFile
+from fastapi import FastAPI, UploadFile, HTTPException
 from transformers import pipeline
 import aiofiles
 
@@ -16,9 +16,13 @@ async def root():
 
 @app.post("/audio")
 async def post_audio(file: UploadFile):
-    user_message = await speech2text(file)
-    bot_response = get_bot_response(user_message)
-    print(bot_response)
+    try:
+        user_message = await speech2text(file)
+        bot_response = get_bot_response(user_message)
+        print(bot_response)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 
 async def speech2text(file: UploadFile):
     async with aiofiles.open(file.filename, "wb") as out_file:
