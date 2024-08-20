@@ -11,6 +11,7 @@ tensorflow = "*"
 tf-keras = "*"
 torch = "*"
 aiofiles = "*"
+requests = "*"
 
 [dev-packages]
 

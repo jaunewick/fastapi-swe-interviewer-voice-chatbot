@@ -1,10 +1,14 @@
 import os
 import json
 from fastapi import FastAPI, UploadFile, HTTPException
+from fastapi.responses import StreamingResponse
 from transformers import pipeline
 import aiofiles
+import requests
 
 app = FastAPI()
+
+HUGGINGFACEHUB_API_TOKEN = os.getenv("HUGGINGFACEHUB_API_TOKEN")
 
 whisper = pipeline('automatic-speech-recognition', model='openai/whisper-medium', device=0)
 smol = pipeline("text-generation", model="HuggingFaceTB/SmolLM-360M-Instruct", device=0)
@@ -19,7 +23,10 @@ async def post_audio(file: UploadFile):
     try:
         user_message = await speech2text(file)
         bot_response = get_bot_response(user_message)
-        print(bot_response)
+        audio_response = text2speech(bot_response)
+        def iterfile():
+            yield audio_response
+        return StreamingResponse(iterfile(), media_type="audio/mpeg")
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -53,7 +60,7 @@ def load_messages():
             {
                 "role": "system",
                 "content":"You are a hiring manager interviewing someone for a junior frontend developer position. "+
-                "Ask technical questions that are relevant to a junior level developer. Your name is John. "+
+                "Ask technical questions that are relevant to a junior level developer. Your name is Daniel. "+
                 "The person your are interviewing, his name is Daniel. Keep responses under 30 words and be funny sometimes."
             }
         )
@@ -65,3 +72,12 @@ def save_messages(user_message, bot_response):
     messages.extend([user_message, bot_response])
     with open(file, 'w') as f:
         json.dump(messages, f)
+
+def text2speech(bot_response):
+    API_URL = "https://api-inference.huggingface.co/models/espnet/kan-bayashi_ljspeech_vits"
+    headers = {"Authorization": f"Bearer {HUGGINGFACEHUB_API_TOKEN}"}
+    payloads = {
+        "inputs": bot_response
+    }
+    response = requests.post(API_URL, headers=headers, json=payloads)
+    return response.content
