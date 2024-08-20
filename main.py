@@ -36,7 +36,7 @@ def get_bot_response(user_message):
     messages.append(user_message)
     parsed_bot_response = smol(messages, max_new_tokens=128)[0]['generated_text'][-1]
     save_messages(user_message, parsed_bot_response)
-    return parsed_bot_response
+    return parsed_bot_response['content']
 
 
 # Helper functions
@@ -52,9 +52,9 @@ def load_messages():
         messages.append(
             {
                 "role": "system",
-                "content":"You are interviewing the user for a software engineering internship position. "+
-                "Ask short questions that are relevant to a intern level developer. Your name is Greg. "+
-                "The user is Daniel. Keep responses under 30 words and be funny sometimes, but keep the interview moving forward"
+                "content":"You are a hiring manager interviewing someone for a junior frontend developer position. "+
+                "Ask technical questions that are relevant to a junior level developer. Your name is John. "+
+                "The person your are interviewing, his name is Daniel. Keep responses under 30 words and be funny sometimes."
             }
         )
     return messages
