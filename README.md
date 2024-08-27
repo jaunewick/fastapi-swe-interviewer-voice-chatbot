@@ -1,6 +1,6 @@
 # fastapi-swe-interviewer-voice-chatbot
 
-A FastAPI application that simulates a conversational interview between you and a hiring manager, helping you prepare for common frontend developer interview questions.
+A FastAPI application that simulates a conversational interview between you and a custom AI assistant acting as a hiring manager, helping you prepare for common frontend developer interview questions.
 
 Simply upload an audio file with your response, and the chatbot will generate a follow-up question or feedback.
 
