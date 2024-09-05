@@ -4,7 +4,8 @@ import aiofiles
 import requests
 from ..config import HUGGINGFACEHUB_API_TOKEN
 
-whisper = pipeline('automatic-speech-recognition', model='openai/whisper-medium', device=0)
+# Set device=0 if using gpu
+whisper = pipeline('automatic-speech-recognition', model='openai/whisper-medium', device=-1)
 API_URL = "https://api-inference.huggingface.co/models/espnet/kan-bayashi_ljspeech_vits"
 
 async def speech2text(file: UploadFile):

@@ -39,4 +39,4 @@ COPY . .
 # Expose the port that the application listens on.
 EXPOSE 8000
 
-CMD poetry run fastapi dev app/main.py --host 0.0.0.0 --reload
+CMD poetry run uvicorn app.main:app --host 0.0.0.0 --reload

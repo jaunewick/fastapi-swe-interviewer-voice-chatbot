@@ -2,7 +2,8 @@ from transformers import pipeline
 import os
 import json
 
-smol = pipeline("text-generation", model="HuggingFaceTB/SmolLM-360M-Instruct", device=0)
+# Set device=0 if using gpu
+smol = pipeline("text-generation", model="HuggingFaceTB/SmolLM-360M-Instruct", device=-1)
 
 def get_bot_response(user_message):
     messages = load_messages()
